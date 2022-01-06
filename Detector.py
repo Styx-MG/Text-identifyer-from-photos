@@ -23,26 +23,40 @@ list_files = os.listdir(input_folder_path)
 
 #Loop through the files, searchs for .jpg files
 
+files_toScan = []
+
 for file_names in list_files:
     if '.jpg' in file_names:
      #print(file_names)
-     png_images = file_names
+     files_toScan.append(file_names) #fixed, where it would only process 1 document
      #files_to_scan[]=file_names
 
-print(png_images) #Print in console files .jpg
+print(files_toScan) #Print in console files .jpg
 
 # Open Images  and change them to tesseract apt format
-  
-image_A = cv2.imread(png_images)
-P_image= cv2.cvtColor(image_A,cv2.COLOR_BGR2RGB)
+#image_arr = []
+#P_image_arr = []
+#for q in range(len(files_toScan)):
+      #image_arr.append(cv2.imread(files_toScan[q]))
+      #P_image_arr.append( cv2.cvtColor(image_arr,cv2.COLOR_BGR2RGB))
 
-#print(pytesseract.image_to_data(P_image))
-#debug print
+#for r in range(len(image_arr)):
+  #  print(image_arr[r])
+
+def openNanalyzefile(file):
+    image_i = cv2.imread(file)
+    P_image = cv2.cvtColor(image_i, cv2.COLOR_BGR2RGB)
+    Data_raw = pytesseract.image_to_data(P_image)
+    return Data_raw
+
+print(openNanalyzefile('pago.jpg'))
+
 with open('dump.txt', 'w') as FileWrite:
-    FileWrite.write(pytesseract.image_to_data(P_image))
+    FileWrite.write(openNanalyzefile("pago.jpg"))
 
-#Analyze data of image with tesseract
-Data_raw = pytesseract.image_to_data(P_image)
+
+
+#print(Data_raw)
 
 #initialise lists
 test_list = [""]
@@ -56,7 +70,7 @@ for i,j in enumerate(Data_raw.splitlines()):
         if len(j)==12:   #if the lenght if greater than 11, the 12th element is the text [12-1]
             word_raw = j[11] #text 
             test_list.append(word_raw) #append text to the empty list
-            print(word_raw) #debug print
+           # print(word_raw) #debug print
 
 for word in range (len(test_list)): #Loop through the text list 
     #lowerCase = word.lower()
@@ -65,8 +79,8 @@ for word in range (len(test_list)): #Loop through the text list
         
     
 
-for x in range(len(main_list)): #print data of the collection list
-    print(main_list[x])
+#for x in range(len(main_list)): #print data of the collection list
+ #   print(main_list[x])
 
 Data_to_exel = OrderedDict() #Writting to ods
 
